@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Clock</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Additional CSS for the 12/24 Hr button */
+        .toggle-24h {
+            background-color: var(--primary-color);
+            border: 0;
+            border-radius: 4px;
+            color: var(--secondary-color);
+            font-size: 16px;
+            padding: 8px 12px;
+            margin-top: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .toggle-24h:hover {
+            background-color: var(--primary-color-dark);
+        }
+
+        .toggle-24h:focus {
+            outline: none;
+        }
+    </style>
+</head>
+<body>
+    <button class="toggle">Dark mode</button>
+    <div class="clock-container">
+        <div class="clock">
+            <div class="needle hour"></div>
+            <div class="needle minute"></div>
+            <div class="needle second"></div>
+            <div class="center-point"></div>
+        </div>
+        <div class="time"></div>
+        <button class="toggle-24h" onclick="toggleTimeFormat()">12/24 Hr</button>
+        <div class="date"></div>
+    </div>
+
+    <!-- SOCIAL PANEL HTML -->
+    <div class="social-panel-container">
+        <div class="social-panel">
+            <p>Created with <i class="fa fa-heart"></i> by
+                <a target="_blank" href="https://florin-pop.com">Florin Pop</a></p>
+            <button class="close-btn"><i class="fas fa-times"></i></button>
+            <h4>Get in touch on</h4>
+            <ul>
+                <li>
+                    <a href="https://www.patreon.com/florinpop17" target="_blank">
+                        <i class="fab fa-discord"></i>
+                    </a>
+                </li>
+                <li>
+                    <a href="https://twitter.com/florinpop1705" target="_blank">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                </li>
+                <li>
+                    <a href="https://linkedin.com/in/florinpop17" target="_blank">
+                        <i class="fab fa-linkedin"></i>
+                    </a>
+                </li>
+                <li>
+                    <a href="https://facebook.com/florinpop17" target="_blank">
+                        <i class="fab fa-facebook"></i>
+                    </a>
+                </li>
+                <li>
+                    <a href="https://instagram.com/florinpop17" target="_blank">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        const hourEl = document.querySelector('.hour');
+        const minuteEl = document.querySelector('.minute');
+        const secondEl = document.querySelector('.second');
+        const timeEl = document.querySelector('.time');
+        const dateEl = document.querySelector('.date');
+        const toggle = document.querySelector('.toggle');
+        const toggle24h = document.querySelector('.toggle-24h');
+
+        let is24hFormat = false;
+
+        const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+        const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+        toggle.addEventListener('click', (e) => {
+            const html = document.querySelector('html');
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                e.target.innerHTML = 'Dark mode';
+            } else {
+                html.classList.add('dark');
+                e.target.innerHTML = 'Light mode';
+            }
+        });
+
+        function setTime() {
+            const time = new Date();
+            const month = time.getMonth();
+            const day = time.getDay();
+            const date = time.getDate();
+            let hours = time.getHours();
+            const hoursForClock = hours % 12;
+            const minutes = time.getMinutes();
+            const seconds = time.getSeconds();
+
+            if (is24hFormat) {
+                timeEl.innerHTML = `${hours < 10 ? `0${hours}` : hours}:${minutes < 10 ? `0${minutes}` : minutes}`;
+            } else {
+                const ampm = hours >= 12 ? 'PM' : 'AM';
+                hours = hours % 12;
+                hours = hours ? hours : 12; // the hour '0' should be '12'
+                timeEl.innerHTML = `${hours < 10 ? `0${hours}` : hours}:${minutes < 10 ? `0${minutes}` : minutes} ${ampm}`;
+            }
+
+            hourEl.style.transform = `translate(-50%, -100%) rotate(${scale(hoursForClock, 0, 11, 0, 360)}deg)`;
+            minuteEl.style.transform = `translate(-50%, -100%) rotate(${scale(minutes, 0, 59, 0, 360)}deg)`;
+            secondEl.style.transform = `translate(-50%, -100%) rotate(${scale(seconds, 0, 59, 0, 360)}deg)`;
+
+            dateEl.innerHTML = `${days[day]}, ${months[month]} <span class="circle">${date}</span>`;
+        }
+
+        function toggleTimeFormat() {
+            is24hFormat = !is24hFormat;
+            setTime();
+        }
+
+        // StackOverflow https://stackoverflow.com/questions/10756313/javascript-jquery-map-a-range-of-numbers-to-another-range-of-numbers
+        const scale = (num, in_min, in_max, out_min, out_max) => {
+            return (num - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+        }
+
+        setTime();
+        setInterval(setTime, 1000);
+
+        // SOCIAL PANEL JS
+        const floating_btn = document.querySelector('.floating-btn');
+        const close_btn = document.querySelector('.close-btn');
+        const social_panel_container = document.querySelector('.social-panel-container');
+
+        floating_btn.addEventListener('click', () => {
+            social_panel_container.classList.toggle('visible')
+        });
+
+        close_btn.addEventListener('click', () => {
+            social_panel_container.classList.remove('visible')
+        });
+    </script>
+</body>
+</html>
