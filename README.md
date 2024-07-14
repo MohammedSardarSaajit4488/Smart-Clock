@@ -13,7 +13,7 @@ This project features a dynamic clock created using HTML, CSS, and JavaScript. T
 
 ## Demo
 
-![Dynamic Clock](dynamic-clock.png)
+![Dynamic Clock](preciew.png)
 
 ## Features
 
