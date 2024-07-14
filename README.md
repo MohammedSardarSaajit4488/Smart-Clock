@@ -13,7 +13,8 @@ This project features a dynamic clock created using HTML, CSS, and JavaScript. T
 
 ## Demo
 
-![Dynamic Clock](preview.png)
+![Dynamic Clock](Smart Clock/preview.png)
+
 
 ## Features
 
